@@ -183,16 +183,28 @@ class App extends Component {
   // const [repository] = useState(new Repository(mockData));
   componentDidMount() {
     console.log('The Repost List', this.state.repostList);
+    // this.state.repository.updateColumn('1', mockData[0].rows);
   }
 
-  addCard = columnId => {
+  addCard = (columnId, item) => {
+    console.log('Item in add card', item);
+    console.log('Repost List:addCard', this.state.repostList);
+    const itemExists = this.state.repostList.filter(
+      listItem => listItem.id === item.id,
+    );
+    console.log('Item Exists', itemExists);
+    if (itemExists.length !== 0) {
+      return;
+    }
     const data = {
-      id: `${columnId}${++mockDataRowLength[columnId]}`,
-      name: `Row ${mockDataRowLength[columnId]} (Column ${columnId})`,
+      id: item.id,
+      title: item.title,
+      image_url: item.image_url,
     };
 
     // Call api add row here
     // Add row to the board
+    this.state.repostList.push(item);
     this.state.repository.addRow(columnId, data);
   };
 
@@ -204,24 +216,26 @@ class App extends Component {
     repository.updateRow(cardId, dummy);
   };
 
-  deleteCard = cardId => {
-    const {repository} = this.state;
+  deleteCard = card => {
+    const {repository, repostList} = this.state;
     // Call api delete row here
     // Delete row on the board
-    console.log('Card Id', cardId);
+    console.log('Card from delete in delete', card);
     // Call api delete row here
     // Delete row on the board
-    repository.deleteRow(cardId);
-    const addRowToColumnOne = mockData[0].rows.filter(
-      item => item.id == cardId,
-    );
-    console.log('The data from addRowColunm', addRowToColumnOne);
-    repository.addRow('1', addRowToColumnOne[0]);
-    const newList = [...this.state.repostList];
-    const filteredData = newList.filter(item => item.id !== cardId);
-    console.log('filteredData', filteredData);
-    this.setState({repostList: filteredData});
-    this.componentDidMount();
+    console.log('Repost List', repostList);
+    const findIndex = repostList.findIndex(item => item.title == card.title);
+    repository.deleteRow(findIndex, 2);
+    // const addRowToColumnOne = mockData[0].rows.filter(
+    //   item => item.id == cardId,
+    // );
+    // console.log('The data from addRowColunm', addRowToColumnOne);
+    // repository.addRow('1', addRowToColumnOne[0]);
+    // const newList = [...this.state.repostList];
+    // const filteredData = newList.filter(item => item.id !== cardId);
+    // console.log('filteredData', filteredData);
+    // this.setState({repostList: filteredData});
+    // this.componentDidMount();
   };
 
   renderCard = ({item, index}) => {
@@ -256,7 +270,7 @@ class App extends Component {
           <TouchableOpacity
             // style={{marginRight: 50, backgroundColor: 'red'}}
             // hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-            onPress={() => deleteCard(item.id)}>
+            onPress={() => deleteCard(item.data)}>
             <Text>✕</Text>
           </TouchableOpacity>
         </View>
@@ -377,10 +391,17 @@ class App extends Component {
     console.log('Item that has moved', card.data);
     //
     console.log('Item that has moved', fromColumnId, toColumnId, card.data);
-    if (fromColumnId === undefined) {
+    if (fromColumnId === undefined && toColumnId == '1') {
+      // this.state.repostList.push(card.data);
+      this.addCard('2', card.data);
       return;
     }
-    this.state.repostList.push(card.data);
+    // this.state.repostList.push(card.data);
+    // console.log('The Mock Data Column', mockData[0].rows);
+    // const columnId = '1';
+    // this.state.repository.updateColumn(columnId, {title: 'yo', image: 'yo'});
+    // this.state.repository.deleteColumn(columnId);
+    // this.forceUpdate();
     this.componentDidMount();
   };
 

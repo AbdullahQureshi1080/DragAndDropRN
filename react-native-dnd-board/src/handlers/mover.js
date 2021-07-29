@@ -8,20 +8,17 @@ export default class Mover {
   }
 
   findColumnAtPosition = (columns, x, y) => {
-    return columns.find(column => {
-      let layout = column.layout;
-
-      if (!layout) {
-        return false;
-      }
-
-      const left = x > layout.x;
-      const right = x < layout.x + layout.width;
-      const up = y > layout.y - this.THRESHOLD;
-      const down = y < layout.y + layout.height + this.THRESHOLD;
-
-      return layout && left && right && up && down;
-    });
+    // return columns.find(column => {
+    //   let layout = column.layout;
+    //   if (!layout) {
+    //     return false;
+    //   }
+    //   const left = x > layout.x;
+    //   const right = x < layout.x + layout.width;
+    //   const up = y > layout.y - this.THRESHOLD;
+    //   const down = y < layout.y + layout.height + this.THRESHOLD;
+    //   return layout && left && right && up && down;
+    // });
   };
 
   selectItem = (x, y, draggedRow, item) => {
@@ -69,10 +66,8 @@ export default class Mover {
     repository.columns[fromColumnId].rows = repository.columns[
       fromColumnId
     ].rows.filter(item => item.id !== row.id);
-
     repository.columns[fromColumnId].measureRowIndex();
     repository.columns[toColumnId].addRow(row);
-
     repository.notify(fromColumnId, 'reload');
     repository.notify(toColumnId, 'reload');
   };
@@ -82,7 +77,7 @@ export default class Mover {
       return;
     }
 
-    const item = { ...firstItem };
+    const item = {...firstItem};
 
     firstItem.setRef(secondItem.ref);
     firstItem.setIndex(secondItem.index);

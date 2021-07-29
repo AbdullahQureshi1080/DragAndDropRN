@@ -189,22 +189,27 @@ export default class Repository {
     }
   };
 
-  deleteRow = rowId => {
+  deleteRow = (rowId, columnID) => {
+    console.log('The Row Id', rowId);
+    console.log('The Column Id', columnID);
     // Manual find index to optimize loop time
     let rowIndex = -1;
-    let columnId = '';
+    let columnId = columnID;
+    // let columnId = '';
 
-    const columnIndex = Object.values(this.columns).findIndex(column => {
-      const i = column.rows.findIndex(row => row.id === rowId);
-      if (i > -1) {
-        columnId = column.id;
-        rowIndex = i;
-        return true;
-      } else {
-        return false;
-      }
-    });
-
+    // const columnIndex = Object.values(this.columns).findIndex(column => {
+    //   const i = column.rows.findIndex(row => row.id === rowId);
+    //   if (i > -1) {
+    //     console.log('The row index', i);
+    //     // columnId = column.id;
+    //     rowIndex = i;
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // });
+    const columnIndex = 1;
+    console.log('Column Index', columnIndex);
     if (columnIndex > -1 && columnId) {
       this.columns[columnId].rows.splice(rowIndex, 1);
       this.originalData[columnId].rows.splice(rowIndex, 1);
