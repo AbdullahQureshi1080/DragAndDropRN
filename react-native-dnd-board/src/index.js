@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, {useRef, useState, useCallback, useMemo, useEffect} from 'react';
 import {
   PanGestureHandler,
   State,
@@ -17,7 +11,7 @@ import Column from './components/column';
 import Repository from './handlers/repository';
 import Utils from './commons/utils';
 
-const { block, call, cond } = Animated;
+const {block, call, cond} = Animated;
 
 const SCROLL_THRESHOLD = 50;
 const SCROLL_STEP = 8;
@@ -33,9 +27,9 @@ const DraggableBoard = ({
   xScrollThreshold = SCROLL_THRESHOLD,
   yScrollThreshold = SCROLL_THRESHOLD,
   dragSpeedFactor = 1,
-  onRowPress = () => { },
-  onDragStart = () => { },
-  onDragEnd = () => { },
+  onRowPress = () => {},
+  onDragStart = () => {},
+  onDragEnd = () => {},
   style: boardStyle,
   horizontal = true,
 }) => {
@@ -71,7 +65,7 @@ const DraggableBoard = ({
             },
           },
         ],
-        { useNativeDriver: true },
+        {useNativeDriver: true},
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -92,12 +86,13 @@ const DraggableBoard = ({
 
           setHoverComponent(null);
           setMovingMode(false);
-
           if (onDragEnd) {
+            // console.log('In Drag End:Index', hoverRowItem.current.oldColumnId);
             onDragEnd(
               hoverRowItem.current.oldColumnId,
               hoverRowItem.current.columnId,
               hoverRowItem.current,
+              hoverRowItem,
             );
 
             repository.updateOriginalData();
@@ -132,7 +127,7 @@ const DraggableBoard = ({
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current * dragSpeedFactor,
             y: 0,
-            animated: true
+            animated: true,
           });
           repository.measureColumnsLayout();
         } else if (x < xScrollThreshold) {
@@ -140,7 +135,7 @@ const DraggableBoard = ({
           scrollViewRef.current.scrollTo({
             x: scrollOffset.current / dragSpeedFactor,
             y: 0,
-            animated: true
+            animated: true,
           });
           repository.measureColumnsLayout();
         }
@@ -175,16 +170,19 @@ const DraggableBoard = ({
 
   const renderHoverComponent = () => {
     if (hoverComponent && hoverRowItem.current) {
-      
       const row = repository.findRow(hoverRowItem.current);
-      
+
       if (row && row.layout) {
-        const { x, y, width, height } = row.layout;
+        const {x, y, width, height} = row.layout;
         const hoverStyle = [
           style.hoverComponent,
           activeRowStyle,
           {
-            transform: [{ translateX }, { translateY }, { rotate: `${activeRowRotation}deg` }],
+            transform: [
+              {translateX},
+              {translateY},
+              {rotate: `${activeRowRotation}deg`},
+            ],
           },
           {
             top: y - yScrollThreshold,
@@ -205,7 +203,7 @@ const DraggableBoard = ({
     rowItem.setHidden(true);
     repository.hideRow(rowItem);
     await rowItem.measureLayout();
-    hoverRowItem.current = { ...rowItem };
+    hoverRowItem.current = {...rowItem};
 
     setMovingMode(true);
     setHoverComponent(hoverItem);
@@ -296,4 +294,4 @@ const DraggableBoard = ({
 };
 
 export default DraggableBoard;
-export { Repository };
+export {Repository};

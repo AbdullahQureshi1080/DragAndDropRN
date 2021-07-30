@@ -197,14 +197,14 @@ class App extends Component {
       return;
     }
     const data = {
-      id: item.id,
+      id: `${columnId}${++mockDataRowLength[columnId]}`,
       title: item.title,
       image_url: item.image_url,
     };
 
     // Call api add row here
     // Add row to the board
-    this.state.repostList.push(item);
+    this.state.repostList.push(data);
     this.state.repository.addRow(columnId, data);
   };
 
@@ -224,18 +224,13 @@ class App extends Component {
     // Call api delete row here
     // Delete row on the board
     console.log('Repost List', repostList);
-    const findIndex = repostList.findIndex(item => item.title == card.title);
-    repository.deleteRow(findIndex, 2);
-    // const addRowToColumnOne = mockData[0].rows.filter(
-    //   item => item.id == cardId,
-    // );
-    // console.log('The data from addRowColunm', addRowToColumnOne);
-    // repository.addRow('1', addRowToColumnOne[0]);
-    // const newList = [...this.state.repostList];
-    // const filteredData = newList.filter(item => item.id !== cardId);
-    // console.log('filteredData', filteredData);
-    // this.setState({repostList: filteredData});
-    // this.componentDidMount();
+    const newList = [...this.state.repostList];
+    const filteredData = newList.filter(item => item.id !== card.id);
+    console.log('filteredData', filteredData);
+    this.setState({repostList: filteredData});
+    const columnId = '2';
+    repository.deleteRow(card.id, columnId);
+    this.componentDidMount();
   };
 
   renderCard = ({item, index}) => {
@@ -258,6 +253,7 @@ class App extends Component {
       );
     }
     if (item.columnId == '2') {
+      console.log('The Item data in second list', item.data);
       return (
         <View style={styles.cardRepost}>
           <Text style={styles.listIndex}>{index + 1}.</Text>
@@ -386,22 +382,18 @@ class App extends Component {
     console.log('Card ID: ', card.id);
   };
 
-  onDragEnd = (fromColumnId, toColumnId, card) => {
+  onDragEnd = (fromColumnId, toColumnId, card, hoverItem) => {
     //
-    console.log('Item that has moved', card.data);
+    // console.log('Item that has moved', card.data);
     //
-    console.log('Item that has moved', fromColumnId, toColumnId, card.data);
+    // console.log('Item that has moved', fromColumnId, toColumnId, card.data);
+    //
+    // console.log('Hover Item that has moved', hoverItem.current);
     if (fromColumnId === undefined && toColumnId == '1') {
       // this.state.repostList.push(card.data);
-      this.addCard('2', card.data);
+      this.addCard(2, card.data);
       return;
     }
-    // this.state.repostList.push(card.data);
-    // console.log('The Mock Data Column', mockData[0].rows);
-    // const columnId = '1';
-    // this.state.repository.updateColumn(columnId, {title: 'yo', image: 'yo'});
-    // this.state.repository.deleteColumn(columnId);
-    // this.forceUpdate();
     this.componentDidMount();
   };
 

@@ -190,26 +190,22 @@ export default class Repository {
   };
 
   deleteRow = (rowId, columnID) => {
-    console.log('The Row Id', rowId);
-    console.log('The Column Id', columnID);
     // Manual find index to optimize loop time
     let rowIndex = -1;
-    let columnId = columnID;
-    // let columnId = '';
+    // let columnId = columnID;
+    let columnId = '';
 
-    // const columnIndex = Object.values(this.columns).findIndex(column => {
-    //   const i = column.rows.findIndex(row => row.id === rowId);
-    //   if (i > -1) {
-    //     console.log('The row index', i);
-    //     // columnId = column.id;
-    //     rowIndex = i;
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // });
-    const columnIndex = 1;
-    console.log('Column Index', columnIndex);
+    const columnIndex = Object.values(this.columns).findIndex(column => {
+      const i = column.rows.findIndex(row => row.id === rowId);
+      if (i > -1) {
+        console.log('The row index', i);
+        columnId = column.id;
+        rowIndex = i;
+        return true;
+      } else {
+        return false;
+      }
+    });
     if (columnIndex > -1 && columnId) {
       this.columns[columnId].rows.splice(rowIndex, 1);
       this.originalData[columnId].rows.splice(rowIndex, 1);
@@ -336,19 +332,35 @@ export default class Repository {
 
     if (rowIndex > -1) {
       const row = this.columns[draggedRow.columnId].rows[rowIndex];
+      // console.log('The dragged row', draggedRow);
 
-      const fromColumnId = row.columnId;
       const columnAtPosition = this.mover.findColumnAtPosition(
         this.getColumns(),
         x,
         y,
       );
 
+      // console.log('from Column Id in move row', fromColumnId);
+
+      // Added this line for disabling the list ordering in column 1 - left column
+      const fromColumnId = row.columnId;
+      if (fromColumnId == '1') {
+        // console.log(' columnAtPosition in move row', columnAtPosition);
+        return;
+      }
+
+      // -------------------------------
+
       if (!columnAtPosition) {
         return;
       }
       const toColumnId = columnAtPosition.id;
+      // console.log('The fromColumnId', fromColumnId);
       if (toColumnId !== fromColumnId) {
+        // console.log('The toColumnId', toColumnId);
+        if (toColumnId == '1') {
+          return;
+        }
         this.mover.moveToOtherColumn(this, row, fromColumnId, toColumnId);
         if (changeColumnCallback) {
           changeColumnCallback(fromColumnId, toColumnId);
