@@ -230,11 +230,38 @@ class App extends Component {
     this.setState({repostList: filteredData});
     const columnId = '2';
     repository.deleteRow(card.id, columnId);
-    this.componentDidMount();
+    // const {columns, rows} = repository.getItemsChanged();
+    // this.setState({updatedIndexes: rows});
+    // console.log('The Updated rows', rows);
+    // this.componentDidMount();
   };
 
-  renderCard = ({item, index}) => {
+  // getUpdatedIndex(oldItem, index) {
+  //   const {columns, rows} = this.state.repository.getItemsChanged();
+  //   if (rows.length == 0) {
+  //     return;
+  //   }
+  //   const updatedIndex = rows.filter(row => {
+  //     if (row.id == oldItem.id) {
+  //       if (row.index !== index) {
+  //         return row.index;
+  //       }
+  //     }
+  //   });
+  //   // if()
+  //   console.log('The Updated Index', updatedIndex);
+  //   return updatedIndex;
+  //   // this.setState({updatedIndex: updatedIndex});
+  // }
+
+  renderCard = ({item, index}, updatedIndexes) => {
+    // const {item, index} = rows;
+    const {repository} = this.state;
     const {deleteCard} = this;
+    // const updatedIndexes = this.getUpdatedIndex(item, index)
+    //   ? this.getUpdatedIndex(item, index)
+    //   : [];
+
     // console.log('The data in render card', item);
     if (item.columnId == '1') {
       return (
@@ -254,9 +281,12 @@ class App extends Component {
     }
     if (item.columnId == '2') {
       console.log('The Item data in second list', item.data);
+
+      // console.log('The Updated rows', rows);
       return (
         <View style={styles.cardRepost}>
           <Text style={styles.listIndex}>{index + 1}.</Text>
+
           <View style={styles.listItemContainer}>
             {/* <Image style={styles.image} source={{uri: item.data.image_url}} /> */}
             <Text style={styles.listTextRepost} numberOfLines={1}>
